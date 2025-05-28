@@ -4,11 +4,11 @@ describe('Ship', () => {
     let ship;
 
     beforeEach(() => {
-        ship = new Ship();
+        ship = new Ship(3);
     });
 
     it('should initialize with default values', () => {
-        expect(ship.length).toBe(0);
+        expect(ship.length).toBe(3);
         expect(ship.hits).toBe(0);
         expect(ship.sunk).toBeFalsy();
     });
@@ -19,7 +19,6 @@ describe('Ship', () => {
     });
 
     it('should sink', () => {
-        ship.length = 3;
         ship.hit();
         ship.hit();
         ship.hit();
