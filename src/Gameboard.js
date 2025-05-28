@@ -3,11 +3,10 @@ import { Ship } from "./Ship.js";
 export class Gameboard {
     constructor(size = 10) {
         this.size = size;
-        this.grid = Array.from({length: size}, () => 
-            Array(size).fill(null)
-        );
+        this.grid = Array.from({length: size}, () => Array(size).fill(null));
         this.ships = [];
         this.misses = [];
+        this.fired = new Set();
     }
 
     placeShip(start, length, dir = 'horizontal') {
@@ -27,7 +26,7 @@ export class Gameboard {
             squares.push({x, y});
         }
 
-        for (const {x, y} of squares) {
+        for(const {x, y} of squares) {
             if(this.grid[y][x] !== null) {
                 throw new Error('ship placement overlaps another ship');
             }
@@ -44,10 +43,28 @@ export class Gameboard {
     }
 
     receiveAttack({x, y}) {
+        if(x < 0 || x >= this.size || y < 0 || y>= this.size) {
+            throw new Error('coordinate out of bounds');
+        }
 
+        const key = `${x},${y}`;
+        if(this.fired.has(key)) {
+            throw new Error('square already attacked');
+        }
+        this.fired.add(key);
+
+        const target = this.grid[y][x];
+
+        if(target === null) {
+            this.misses.push({x, y});
+            return { hit: false, shipSunk: false };
+        }
+
+        target.hit();
+        return { hit: true, shipSunk: target.isSunk() };
     }
 
-    missedShots() {
+    get missedShots() {
         return [...this.misses];
     }
 
