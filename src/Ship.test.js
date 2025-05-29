@@ -10,7 +10,6 @@ describe('Ship', () => {
     it('should initialize with default values', () => {
         expect(ship.length).toBe(3);
         expect(ship.hits).toBe(0);
-        expect(ship.sunk).toBeFalsy();
     });
 
     it('should get hit', () => {

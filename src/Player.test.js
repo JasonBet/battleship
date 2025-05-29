@@ -1,7 +1,7 @@
 import { Player } from './Player.js';
 
 describe('Player', () => {
-  it('initialises with its own 10×10 gameboard', () => {
+  it('initialises with its own 10 x10 gameboard', () => {
     const p = new Player();
     expect(p.type).toBe('human');
     expect(p.gameboard.size).toBe(10);
