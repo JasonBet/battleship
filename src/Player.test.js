@@ -36,7 +36,7 @@ describe('Player', () => {
       const res = cpu.attack(bob);
       expect(res).toHaveProperty('hit');
 
-      expect(cpu.moves).toHaveSize(i + 1);
+      expect(cpu.moveCount).toBe(i + 1);
     }
   });
 });
