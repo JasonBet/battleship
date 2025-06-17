@@ -1,17 +1,91 @@
-/* styles.css */
-body { font-family: sans-serif; display: flex; flex-direction: column;
-       align-items: center; gap: 0.75rem; margin: 0; padding: 1rem; }
+/* styles.css – colourful drop-in ----------------------------------------- */
 
-table { border-collapse: collapse; }
-td    { width: 2rem; height: 2rem; border: 1px solid #aaa; cursor: pointer; }
+/* A little nautical palette */
+:root {
+  --sea     : #0d47a1;   /* deep ocean  */
+  --wave    : #1976d2;   /* lighter sea */
+  --foam    : #e3f2fd;   /* frothy edge */
+  --steel   : #90a4ae;   /* ship hull   */
+  --hit     : #ff5252;   /* direct hit  */
+  --miss    : #4fc3f7;   /* splash      */
+  --sunk    : #212121;   /* wreckage    */
 
-.boards { display: flex; gap: 1.5rem; }
+  --grid-size: 2rem;
+  --border   : 1px solid rgba(255,255,255,0.25);
+}
 
-/* colouring */
-.ship { background: #ccc; }
-.hit  { background: crimson; }
-.miss { background: lightblue; }
-.sunk { background: black;   }
+*{box-sizing:border-box}
 
-button { padding: 0.4rem 0.8rem; }
-.status { font-weight: bold; }
+body{
+  margin:0;
+  padding:1rem;
+  font-family:sans-serif;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:.75rem;
+  background:linear-gradient(135deg,var(--sea),var(--wave));
+  color:#fff;
+}
+
+/* buttons --------------------------------------------------------------- */
+button{
+  padding:.45rem .9rem;
+  font-weight:600;
+  border:none;
+  border-radius:4px;
+  cursor:pointer;
+  transition:.25s;
+  background:#fff;
+  color:var(--sea);
+}
+button:hover{background:var(--foam)}
+.status{
+  font-weight:bold;
+  height:1.5em;            /* fixes vertical jump */
+  display:flex;
+  align-items:center;      /* keeps text vertically centred */
+}
+
+/* board layout ---------------------------------------------------------- */
+.boards{display:flex;gap:1.5rem}
+
+/* grid cells ------------------------------------------------------------ */
+table{border-collapse:collapse}
+td{
+  width:var(--grid-size);
+  height:var(--grid-size);
+  border:var(--border);
+  background:rgba(255,255,255,0.05);
+  cursor:pointer;
+  transition:background .15s;
+}
+td:not(.hit):not(.miss):not(.sunk):hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* colouring ------------------------------------------------------------- */
+.ship{background:var(--steel)}
+.hit {
+  background:var(--hit);
+  animation:splash .3s ease-out;
+}
+.miss{background:var(--miss)}
+.sunk{background:var(--sunk)}
+
+/* tiny splash on hit ---------------------------------------------------- */
+@keyframes splash{
+  0%  {transform:scale(.1) rotate(-15deg)}
+  60% {transform:scale(1.15) rotate(5deg)}
+  100%{transform:scale(1)   rotate(0)}
+}
+
+/* pulse animation for the Start button when ships are all placed */
+@keyframes pulse {
+  0%   {transform: scale(1);   box-shadow: 0 0 0 0 rgba(255,255,255,.6);}
+  70%  {transform: scale(1.08); box-shadow: 0 0 0 8px rgba(255,255,255,0);}
+  100% {transform: scale(1);   box-shadow: 0 0 0 0 rgba(255,255,255,0);}
+}
+button.attention {
+  animation: pulse 1.2s ease-in-out infinite;
+}

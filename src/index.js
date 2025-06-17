@@ -9,6 +9,8 @@ const status   = add('p', 'status', 'Place your ships');
 const orientBtn = add('button', '', 'Rotate (Horizontal)');
 const randBtn   = add('button', '', 'Randomise');
 const startBtn  = add('button', '', 'Start Battle');
+const resetBtn  = add('button', '', 'New Game');
+resetBtn.style.display = 'none';
 
 const boards = add('div', 'boards');
 const ownGrid   = makeGrid('own');
@@ -31,6 +33,7 @@ randBtn.onclick = () => {
   lengths     = [];
   orientation = 'horizontal';
   status.textContent = 'Fleet randomised – click “Start Battle”';
+  startBtn.classList.add('attention');
   render();
 };
 
@@ -39,6 +42,7 @@ startBtn.onclick = () => {
     alert('Place all ships first!');
     return;
   }
+  startBtn.classList.remove('attention'); 
   controller.phase = 'battle';
   status.textContent = 'Battle started – your turn!';
   render();
@@ -59,6 +63,7 @@ ownGrid.addEventListener('click', e => {
     if (!lengths.length) {
       status.textContent = 'All ships placed – click “Start Battle”';
       orientation = 'horizontal';
+      startBtn.classList.add('attention');
     }
     render();
   } catch (err) {
@@ -83,9 +88,10 @@ enemyGrid.addEventListener('click', e => {
 controller.addEventListener('update', render);
 controller.addEventListener('gameover', () => {
   status.textContent =
-    controller.humanBoard.allShipsSunk()
-      ? '💥  You lost!'
-      : '🎉  You won!';
+    controller.humanBoard.allShipsSunk() ? '💥  You lost!' : '🎉  You won!';
+  orientBtn.disabled = randBtn.disabled = startBtn.disabled = true;
+  resetBtn.style.display = 'inline-block';
+  startBtn.classList.remove('attention');
   render();
 });
 
@@ -138,4 +144,18 @@ function add(tag, cls = '', text = '') {
   if (text) el.textContent = text;
   root.append(el);
   return el;
+}
+
+resetBtn.onclick = () => resetGame();
+
+function resetGame() {
+  controller.reset();
+
+  lengths = [5, 4, 3, 3, 2];
+  orientation = 'horizontal';
+  status.textContent = 'Place your ships';
+  orientBtn.disabled = randBtn.disabled = false;
+  startBtn.disabled  = false;
+  resetBtn.style.display = 'none';
+  render();
 }

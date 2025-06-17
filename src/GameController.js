@@ -14,6 +14,16 @@ export class GameController extends EventTarget {
     this.opponent = this.computer;
   }
 
+  reset() {
+    this.human    = new Player('human',    this.human.gameboard.size);
+    this.computer = new Player('computer', this.computer.gameboard.size);
+    this.#autoPlaceShips(this.computer);
+    this.phase    = 'placement';
+    this.current  = this.human;
+    this.opponent = this.computer;
+    this.dispatchEvent(new Event('update'));
+  }
+
   placeShip(start, length, dir) {
     if (this.phase !== 'placement') return false;
     this.human.gameboard.placeShip(start, length, dir);
