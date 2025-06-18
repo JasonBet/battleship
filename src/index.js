@@ -7,7 +7,7 @@ root.innerHTML = '';
 
 const status   = add('p', 'status', 'Place your ships');
 const orientBtn = add('button', '', 'Rotate (Horizontal)');
-const randBtn   = add('button', '', 'Randomise');
+const randBtn   = add('button', '', 'Randomize');
 const startBtn  = add('button', '', 'Start Battle');
 const resetBtn  = add('button', '', 'New Game');
 resetBtn.style.display = 'none';
@@ -32,7 +32,7 @@ randBtn.onclick = () => {
   controller.randomiseHumanFleet();
   lengths     = [];
   orientation = 'horizontal';
-  status.textContent = 'Fleet randomised – click “Start Battle”';
+  status.textContent = 'Fleet randomized – click “Start Battle”';
   startBtn.classList.add('attention');
   render();
 };
@@ -85,7 +85,25 @@ enemyGrid.addEventListener('click', e => {
   }
 });
 
-controller.addEventListener('update', render);
+controller.addEventListener('update', e => {
+  render();
+  if (controller.phase !== 'battle') return;
+
+  const result = e.detail;
+  if (!result) return;
+
+  const playerShot = controller.current === controller.human;
+
+  if (playerShot) {
+    status.textContent = result.hit
+      ? result.shipSunk ? '🔥  You sunk a ship!' : '💥  Hit!'
+      : 'Splash – miss!';
+  } else {
+    status.textContent = result.hit
+      ? result.shipSunk ? '⚠️  Your ship was sunk!' : '💢  Computer hit!'
+      : 'Computer missed – your turn!';
+  }
+});
 controller.addEventListener('gameover', () => {
   status.textContent =
     controller.humanBoard.allShipsSunk() ? '💥  You lost!' : '🎉  You won!';
