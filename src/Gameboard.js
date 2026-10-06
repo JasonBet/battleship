@@ -3,7 +3,7 @@ import { Ship } from './Ship.js';
 export class Gameboard {
   #grid;
   #misses = [];
-  #ships  = [];invalid
+  #ships  = [];
   #fired  = new Set();
 
   constructor(size = 10) {
